@@ -4,7 +4,7 @@
 'use strict';
 
 angular
-    .module('digicode', ['ngMaterial', 'ngAnimate', 'ngUnderscore'])
+    .module('maDigicode', ['ngMaterial', 'ngAnimate', 'ngUnderscore'])
     .directive('digicode', digicode);
     
 digicode.$inject = ['underscore', '$animate'];   

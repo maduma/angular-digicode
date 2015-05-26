@@ -5,17 +5,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
-  <link rel="stylesheet" href="app/digicode.css">
+  <link rel="stylesheet" href="angular-digicode.css">
   <title>Digicode</title>
 </head>
 
 <body>
   <div layout="column">
     <div style="height: 4em;"></div>
-    <div layout="column" ng-controller="ctrl as ctrl">
-      <h4 style="text-align: center;">{{ ctrl.title }} - {{ ctrl.count }}</h4>
+    <div layout="column" ng-controller="ctrl as main">
+      <p style="text-align: center;">
+        {{ main.title }} ( {{ main.count }} :
+        <span style="color: green;">{{ main.successCount }}</span> /
+        <span style="color: red;">{{ main.failureCount }}</span>
+        )<br>
+      </p>
       <div layout="row" layout-align="center">
-        <digicode max-try="3" pin="ctrl.pin()" success="ctrl.success()" failure="ctrl.failure()"></digicode>
+        <digicode max-try="3" pin="main.pin()" success="main.success()" failure="main.failure()"></digicode>
       </div>
     </div>
   </div>
@@ -25,8 +30,8 @@
   <script type="text/javascript" src="bower_components/angular-animate/angular-animate.js"></script>
   <script type="text/javascript" src="bower_components/angular-material/angular-material.js"></script>
   <script type="text/javascript" src="bower_components/ng-underscore/build/ng-underscore.js"></script>
-  <script type="text/javascript" src="app/digicode.js"></script>
-  <script type="text/javascript" src="app/main.js"></script>
+  <script type="text/javascript" src="angular-digicode.js"></script>
+  <script type="text/javascript" src="main.js"></script>
 </body>
 
 </html>

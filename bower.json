@@ -1,5 +1,5 @@
 {
-  "name": "digicode",
+  "name": "angular-digicode",
   "version": "0.0.0",
   "authors": [
     "Maduma <maduma@pt.lu>"
@@ -11,5 +11,9 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "angular-material": "~0.9.4",
+    "ng-underscore": "~0.1.0"
+  }
 }
