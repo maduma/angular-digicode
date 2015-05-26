@@ -15,15 +15,15 @@ function ctrl() {
     this.pin = function() {
         this.count++;
         return "4444";
-    }
+    };
     this.success = function() {
         this.successCount++;
         console.log('SUCCESS');
-    }
+    };
     this.failure = function() {
         this.failureCount++;
         console.log('FAILURE');
-    }
+    };
 }
     
 })();
