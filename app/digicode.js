@@ -12,48 +12,70 @@ digicode.$inject = ['underscore', '$animate'];
 function digicode(_, $animate) {
 
     var codes = [];
-    var numberOfTry = 0;
-    var maxTry = 3;
+    var tryCount = 0;
+    var maxTry = 1;
+    
+    var htmlTemplate = [
+        '<div class="digicode box-shadow">',
+        '  <div layout="column">',
+        '    <div layout="row" ng-repeat="row in [0, 3, 6]">',
+        '      <md-button',
+        '        class="md-fab md-primary"',
+        '        ng-repeat="col in [0, 1, 2]"',
+        '        ng-click="ctrl.check(ctrl.order[col + row])">',
+        '          {{ ctrl.order[col + row] }}',
+        '      </md-button>',
+        '    </div>',
+        '  </div>',
+        '</div>'
+        ].join('');
     
     return {
-        templateUrl: 'app/digicode.html',
-        scope: {},
+        restrict: 'E',
+        template: htmlTemplate,
+        scope: {
+            maxTry: '@',
+            pin: '&',
+            success: '&',
+            failure: '&'
+        },
         controller: ctrl,
         controllerAs: 'ctrl',
         bindToController: true
     };
     
-    // should be taken as attribute
-    function pin() {
-        return "1234";
+    function shakeAndShuffle($scope, $element, self) {
+        // shaking animation
+        $animate.addClass($element, 'shake').then(function() {
+            $animate.removeClass($element, 'shake');
+            // shuffle the digicode
+            self.order = _.shuffle(_.range(1,10));
+            // async method changed order, need to do manual update
+            $scope.$apply();
+        });
     }
-    
     
     function ctrl($scope, $element) {
         var self = this;
         // shuffle the digicode
-        this.order = _.shuffle(_.range(1,10));
-        
-        
-        this.check = function(code) {
+        self.order = _.shuffle(_.range(1,10));
+        // override default value maxTry
+            if (typeof self.maxTry !== 'undefined') {
+            maxTry = parseInt(self.maxTry, 10);
+        } 
+        // check the pin
+        self.check = function(code) {
             codes.push(code);
             if (codes.length === 4) {
-                if (codes.join('') === pin()) {
-                    console.log("sucess");
-                    // success callback
+                tryCount++;
+                if (codes.join('') === self.pin()) {
+                    tryCount = 0;
+                    self.success();
                 } else {
-                    console.log("failure");
-                    // shaking animation
-                    $animate.addClass($element, 'shake').then(function() {
-                        $animate.removeClass($element, 'shake');
-                        self.order = _.shuffle(_.range(1,10));
-                        $scope.$apply();
-                    });
-                    
-                    numberOfTry++;
-                    if(numberOfTry === maxTry) {
-                        console.log("too many failure quit");
-                        //failure callback
+                    shakeAndShuffle($scope, $element, self);
+                    if(tryCount === maxTry) {
+                        tryCount = 0;
+                        self.failure();
                     }
                 }
                 codes = [];
