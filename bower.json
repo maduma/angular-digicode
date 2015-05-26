@@ -16,8 +16,8 @@
     "angular-material": "~0.9.4",
     "ng-underscore": "~0.1.0"
   },
-  "main": {
+  "main": [
     "angular-digicode.js",
     "angular-digicode.css"
-  }
+  ]
 }
