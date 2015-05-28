@@ -19,7 +19,7 @@ function digicode(_, $animate) {
         '<div class="digicode box-shadow">',
         '  <div layout="column">',
         '    <div layout="row" ng-repeat="row in [0, 3, 6]">',
-        '      <md-button class="md-fab md-primary" ng-repeat="col in [0, 1, 2]" ng-click="ctrl.check(ctrl.order[col + row])">',
+        '      <md-button id="ma-digicode-{{ ctrl.order[col + row] }}" class="md-fab md-primary" ng-repeat="col in [0, 1, 2]" ng-click="ctrl.check(ctrl.order[col + row])">',
         '          {{ ctrl.order[col + row] }}',
         '      </md-button>',
         '    </div>',
@@ -76,7 +76,13 @@ function digicode(_, $animate) {
                     }
                 }
                 codes = [];
-                self.order = _.shuffle(_.range(1,10));
+                
+                // shuffle until the first element change
+                // easy to test
+                var firstCode = self.order[0];
+                do {
+                    self.order = _.shuffle(_.range(1,10));
+                } while (firstCode === self.order[0])
             }
         };
     }
