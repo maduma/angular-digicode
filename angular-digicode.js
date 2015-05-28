@@ -30,6 +30,8 @@ function digicode(_, $animate) {
         '</div>'
         ].join('');
     
+    ctrl.$inject = ['$element'];
+    
     return {
         restrict: 'E',
         template: htmlTemplate,
@@ -45,13 +47,14 @@ function digicode(_, $animate) {
     };
     
     // shaking animation
-    function shake($scope, $element) {
-        $animate.addClass($element, 'shake').then(function() {
-            $animate.removeClass($element, 'shake');
+    function shake(element) {
+        $animate.addClass(element, 'shake').then(function() {
+            $animate.removeClass(element, 'shake');
         });
     }
     
-    function ctrl($scope, $element) {
+    
+    function ctrl($element) {
         var self = this;
         // shuffle the digicode
         self.order = _.shuffle(_.range(1,10));
@@ -68,7 +71,7 @@ function digicode(_, $animate) {
                     tryCount = 0;
                     self.success();
                 } else {
-                    shake($scope, $element);
+                    shake($element);
                     if(tryCount === maxTry) {
                         tryCount = 0;
                         self.failure();
