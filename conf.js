@@ -4,8 +4,9 @@ exports.config = {
   specs: ['spec.js'],
   capabilities: {
     browserName: 'chrome',
-    executablePath: '/opt/google/chrome/chrome',
-    commandLineFlags: '--no-sandbox'
+    'chromeOptions': {
+      args: ['--no-sandbox'] 
+    }   
   }
 
 };
