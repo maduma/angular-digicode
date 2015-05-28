@@ -44,14 +44,10 @@ function digicode(_, $animate) {
         bindToController: true
     };
     
-    function shakeAndShuffle($scope, $element, self) {
-        // shaking animation
+    // shaking animation
+    function shake($scope, $element) {
         $animate.addClass($element, 'shake').then(function() {
             $animate.removeClass($element, 'shake');
-            // shuffle the digicode
-            self.order = _.shuffle(_.range(1,10));
-            // async method changed order, need to do manual update
-            $scope.$apply();
         });
     }
     
@@ -72,13 +68,14 @@ function digicode(_, $animate) {
                     tryCount = 0;
                     self.success();
                 } else {
-                    shakeAndShuffle($scope, $element, self);
+                    shake($scope, $element);
                     if(tryCount === maxTry) {
                         tryCount = 0;
                         self.failure();
                     }
                 }
                 codes = [];
+                self.order = _.shuffle(_.range(1,10));
             }
         };
     }
