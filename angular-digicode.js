@@ -19,7 +19,7 @@ function digicode(_, $animate) {
         '<div class="digicode box-shadow">',
         '  <div layout="column">',
         '    <div layout="row" ng-repeat="row in [0, 3, 6]">',
-        '      <md-button id="ma-digicode-{{ ctrl.order[col + row] }}" class="md-fab md-primary" ng-repeat="col in [0, 1, 2]" ng-click="ctrl.check(ctrl.order[col + row])">',
+        '      <md-button ng-disabled="ctrl.isDisabled" id="ma-digicode-{{ ctrl.order[col + row] }}" class="md-fab md-primary" ng-repeat="col in [0, 1, 2]" ng-click="ctrl.check(ctrl.order[col + row])">',
         '          {{ ctrl.order[col + row] }}',
         '      </md-button>',
         '    </div>',
@@ -56,6 +56,7 @@ function digicode(_, $animate) {
         var self = this;
         // shuffle the digicode
         self.order = _.shuffle(_.range(1,10));
+        self.isDisabled = false;
         // override default value maxTry
             if (typeof self.maxTry !== 'undefined') {
             maxTry = parseInt(self.maxTry, 10);
@@ -65,20 +66,33 @@ function digicode(_, $animate) {
             codes.push(code);
             if (codes.length === 4) {
                 tryCount++;
-                if (codes.join('') === self.pin()) {
-                    tryCount = 0;
-                    self.success();
-                } else {
-                    shake($element);
-                    if(tryCount === maxTry) {
-                        tryCount = 0;
-                        self.failure();
+                self.isDisabled = true;
+                
+                var isUnlock = false;
+                var promise = self.pin();
+                promise.then(function(pin) {
+                    if(codes.join('') === pin) {
+                        isUnlock = true;
                     }
-                }
-                codes = [];
+                });
+                
+                promise.finally(function() {
+                    if (isUnlock) {
+                        tryCount = 0;
+                        self.success();
+                    } else {
+                        shake($element);
+                        if(tryCount === maxTry) {
+                            tryCount = 0;
+                            self.failure();
+                        }
+                    }
+                    codes = [];
+                    self.isDisabled = false;
+                });
                 
                 // shuffle until the first element change
-                // easy to test
+                // only to be easy to test
                 var firstCode = self.order[0];
                 do {
                     self.order = _.shuffle(_.range(1,10));

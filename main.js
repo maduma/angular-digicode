@@ -7,14 +7,20 @@ angular
     .module('main', ['maDigicode'])
     .controller('ctrl', ctrl);
     
-function ctrl() {
+ctrl.$inject = ['$q', '$timeout'];
+    
+function ctrl($q, $timeout) {
     this.title = "Type the code to unlock";
     this.count = 0;
     this.successCount = 0;
     this.failureCount = 0;
     this.pin = function() {
         this.count++;
-        return "4444";
+        var deferred = $q.defer();
+        $timeout(function(){
+            deferred.resolve('4444');
+        },400);
+        return deferred.promise;
     };
     this.success = function() {
         this.successCount++;
