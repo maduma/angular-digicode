@@ -1,7 +1,9 @@
 <div class="digicode">
   <div layout="column">
     <div layout="row" ng-repeat="row in [0, 3, 6]">
-      <md-button ng-disabled="ctrl.disabled" id="ma-digicode-{{ ctrl.order[col + row] }}" class="md-fab md-primary" ng-repeat="col in [0, 1, 2]" ng-click="ctrl.appendDigit(ctrl.order[col + row])">
+      <md-button class="md-fab md-primary" id="ma-digicode-{{ ctrl.order[col + row] }}"
+                 ng-disabled="ctrl.isDisabled" ng-click="ctrl.appendDigit(ctrl.order[col + row])"
+                 ng-repeat="col in [0, 1, 2]">
         {{ ctrl.order[col + row] }}
       </md-button>
     </div>
