@@ -1,9 +1,12 @@
 /* global describe it browser element by expect */
 
 describe('Digicode component', function() {
+
+  var url = 'https://angular-digicode-maduma.c9.io/index.html';
+  url = 'http://localhost/index.html';
   
   it('should shuffle the digicode, the first element change', function() {
-    browser.get('https://angular-digicode-maduma.c9.io/index.html');
+    browser.get(url);
     var code0 = element.all(by.css('button')).get(0).getText(); 
     
     element(by.id('ma-digicode-2')).click();
@@ -18,7 +21,7 @@ describe('Digicode component', function() {
   
   it('should accept code 4444', function() {
 
-    browser.get('https://angular-digicode-maduma.c9.io/index.html');
+    browser.get(url);
     
     expect(element(by.id('ma-digicode-success')).getText()).toEqual('0');
     expect(element(by.id('ma-digicode-count')).getText()).toEqual('0');
@@ -33,7 +36,7 @@ describe('Digicode component', function() {
   
   it('should reject code 2222', function() {
 
-    browser.get('https://angular-digicode-maduma.c9.io/index.html');
+    browser.get(url);
     
     expect(element(by.id('ma-digicode-success')).getText()).toEqual('0');
     expect(element(by.id('ma-digicode-count')).getText()).toEqual('0');

@@ -1,10 +1,14 @@
 /* global describe it browser element by expect */
 
 describe('Digicode component', function() {
+
+  var url = 'https://angular-digicode-maduma.c9.io/index.html';
+  url = 'http://localhost/index.html';
+
   
   it('should try 3 times before failure', function() {
 
-    browser.get('https://angular-digicode-maduma.c9.io/index.html');
+    browser.get(url);
     
     expect(element(by.id('ma-digicode-success')).getText()).toEqual('0');
     expect(element(by.id('ma-digicode-count')).getText()).toEqual('0');
