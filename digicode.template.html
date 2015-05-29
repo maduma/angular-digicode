@@ -1,7 +1,7 @@
-<div class="digicode box-shadow">
+<div class="digicode">
   <div layout="column">
     <div layout="row" ng-repeat="row in [0, 3, 6]">
-      <md-button ng-disabled="ctrl.disabled" id="ma-digicode-{{ ctrl.order[col + row] }}" class="md-fab md-primary" ng-repeat="col in [0, 1, 2]" ng-click="ctrl.check(ctrl.order[col + row])">
+      <md-button ng-disabled="ctrl.disabled" id="ma-digicode-{{ ctrl.order[col + row] }}" class="md-fab md-primary" ng-repeat="col in [0, 1, 2]" ng-click="ctrl.appendDigit(ctrl.order[col + row])">
         {{ ctrl.order[col + row] }}
       </md-button>
     </div>

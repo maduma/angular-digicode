@@ -14,12 +14,16 @@ function ctrl($q, $timeout) {
     this.count = 0;
     this.successCount = 0;
     this.failureCount = 0;
-    this.pin = function() {
+    this.checkPin = function(pin) {
         this.count++;
         var deferred = $q.defer();
         $timeout(function(){
-            deferred.resolve('4444');
-        },400);
+            if (pin === "4444") {
+                deferred.resolve(true);
+            } else {
+                deferred.reject(false);
+            }
+        },150);
         return deferred.promise;
     };
     this.success = function() {

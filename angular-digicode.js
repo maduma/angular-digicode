@@ -11,15 +11,15 @@ digicode.$inject = ['underscore', '$animate'];
     
 function digicode(_, $animate) {
 
-    var codes = [];
+    var digits = [];
     var tryCount = 0;
     var maxTry = 1;
     
     var htmlTemplate = [
-        '<div class="digicode box-shadow">',
+        '<div class="ma-digicode">',
         '  <div layout="column">',
         '    <div layout="row" ng-repeat="row in [0, 3, 6]">',
-        '      <md-button ng-disabled="ctrl.isDisabled" id="ma-digicode-{{ ctrl.order[col + row] }}" class="md-fab md-primary" ng-repeat="col in [0, 1, 2]" ng-click="ctrl.check(ctrl.order[col + row])">',
+        '      <md-button ng-disabled="ctrl.isDisabled" id="ma-digicode-{{ ctrl.order[col + row] }}" class="md-fab md-primary" ng-repeat="col in [0, 1, 2]" ng-click="ctrl.appendDigit(ctrl.order[col + row])">',
         '          {{ ctrl.order[col + row] }}',
         '      </md-button>',
         '    </div>',
@@ -33,7 +33,7 @@ function digicode(_, $animate) {
         scope: {},
         bindToController: {
             maxTry: '@',
-            pin: '&',
+            checkPin: '&', // return a promise
             success: '&',
             failure: '&'
         },
@@ -45,37 +45,56 @@ function digicode(_, $animate) {
     
     return directive;
     
-    // shaking animation
+    // animation
     function shake(element) {
         $animate.addClass(element, 'shake').then(function() {
             $animate.removeClass(element, 'shake');
         });
     }
     
+    // return true if one element of the same index is equal
+    function isOneElementEqual(list1, list2) {
+        for (var i in list1) {
+            if (list1[i] === list2[i]) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     function ctrl($element) {
         var self = this;
+        
         // shuffle the digicode
         self.order = _.shuffle(_.range(1,10));
-        self.isDisabled = false;
+        
         // override default value maxTry
-            if (typeof self.maxTry !== 'undefined') {
+        if (typeof self.maxTry !== 'undefined') {
             maxTry = parseInt(self.maxTry, 10);
         } 
-        // check the pin
-        self.check = function(code) {
-            codes.push(code);
-            if (codes.length === 4) {
+        
+        // prevent input when checking the pin
+        self.isDisabled = false;
+        
+        // click append a digit to the pin code
+        self.appendDigit = function(digit) {
+            digits.push(digit);
+            
+            // check the pin code
+            if (digits.length === 4) {
+                
                 tryCount++;
                 self.isDisabled = true;
                 
+                var enteredPin = digits.join('');
+                var promise = self.checkPin({pin: enteredPin});
+                
                 var isUnlock = false;
-                var promise = self.pin();
-                promise.then(function(pin) {
-                    if(codes.join('') === pin) {
+                promise.then(function(isCorrect) {
+                    if (isCorrect) {
                         isUnlock = true;
                     }
                 });
-                
                 promise.finally(function() {
                     if (isUnlock) {
                         tryCount = 0;
@@ -87,20 +106,19 @@ function digicode(_, $animate) {
                             self.failure();
                         }
                     }
-                    codes = [];
+                    digits = [];
                     self.isDisabled = false;
                 });
                 
-                // shuffle until the first element change
-                // only to be easy to test
-                var firstCode = self.order[0];
+                // shuffle until all elements change
+                var originalList = self.order;
                 do {
                     self.order = _.shuffle(_.range(1,10));
-                } while (firstCode === self.order[0])
+                } while (isOneElementEqual(originalList, self.order))
             }
         };
     }
     
 }
 
-})();
+})(); 
