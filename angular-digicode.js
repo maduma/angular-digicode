@@ -5,7 +5,7 @@
 
 angular
     .module('maDigicode', ['ngMaterial', 'ngAnimate', 'maUnderscore'])
-    .directive('digicode', digicode);
+    .directive('maDigicode', digicode);
     
 digicode.$inject = ['underscore', '$animate'];
     
